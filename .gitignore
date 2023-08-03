@@ -161,3 +161,4 @@ cython_debug/
 
 # extras
 *.sqlite3
+test.rest
