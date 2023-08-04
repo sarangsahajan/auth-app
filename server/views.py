@@ -4,7 +4,7 @@ import jwt
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pymongo import MongoClient
-from .decorators import authenticate_token
+from .decorators import authenticate_token, strong_password, valid_email
 from django.conf import settings
 from datetime import datetime, timedelta
 from rest_framework.decorators import api_view
@@ -17,6 +17,8 @@ db = client["faceswap"]
 
 @api_view(['POST'])
 @csrf_exempt
+@valid_email
+@strong_password
 def signup(request):
     if request.method == "POST":
         try:
@@ -55,6 +57,8 @@ def signup(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@valid_email
+@strong_password
 def login(request):
     if request.method == "POST":
         try:
