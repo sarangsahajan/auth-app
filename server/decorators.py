@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 import jwt
 from pymongo import MongoClient
+from django.conf import settings
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -16,7 +17,9 @@ def authenticate_token(view_func):
 
         try:
             _, token = auth_header.split(' ')
-            payload = jwt.decode(token, "secret_key", algorithms=["HS256"])
+
+            payload = jwt.decode(
+                token, settings.SECRET_KEY, algorithms="HS256")
             print(payload)
             email = payload.get('email')
             user = db.users.find_one({"email": email})

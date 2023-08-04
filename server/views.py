@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from pymongo import MongoClient
 from .decorators import authenticate_token
 from django.conf import settings
+from datetime import datetime, timedelta
 
 
 # MongoDB connection
@@ -36,10 +37,12 @@ def signup(request):
                 "password": hashed_password.decode('utf-8'),
             }
             db.users.insert_one(user)
-
+            months_valid = 1
+            expiry_datetime = datetime.utcnow() + \
+                timedelta(days=months_valid*30)
             # Generate JWT token
             jwt_token = jwt.encode(
-                {"email": email}, settings.SECRET_KEY, algorithm="HS256")
+                {"email": email, "exp": expiry_datetime}, settings.SECRET_KEY, algorithm="HS256")
 
             return JsonResponse({"message": "User created successfully.", "token": jwt_token})
         except Exception as e:
@@ -65,8 +68,11 @@ def login(request):
             hashed_password = user.get('password').encode('utf-8')
             if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
                 # Password is correct, generate JWT token
+                months_valid = 1
+                expiry_datetime = datetime.utcnow() + \
+                    timedelta(days=months_valid*30)
                 jwt_token = jwt.encode(
-                    {"email": email}, settings.SECRET_KEY, algorithm="HS256")
+                    {"email": email, "exp": expiry_datetime}, settings.SECRET_KEY, algorithm="HS256")
                 return JsonResponse({"message": "Login successful.", "token": jwt_token})
             else:
                 return JsonResponse({"error": "Invalid credentials."}, status=401)
