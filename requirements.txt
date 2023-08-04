@@ -1,2 +1,5 @@
 django
 djangorestframework
+bcrypt
+PyJWT
+pymongo

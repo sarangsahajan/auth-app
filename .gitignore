@@ -162,3 +162,5 @@ cython_debug/
 # extras
 *.sqlite3
 test.rest
+.vscode/
+secret_key.txt

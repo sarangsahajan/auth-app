@@ -1,9 +1,10 @@
-from django.urls import re_path
-
+# urls.py
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    re_path('signup', views.signup),
-    re_path('login', views.login),
-    re_path('test_token', views.test_token),
+    path('signup/', views.signup, name='signup'),
+    path('login', views.login, name='login'),  # Add the login URL pattern
+    path('signup', views.signup),  # Allow URL without trailing slash
+    path('test_token', views.protected_view)
 ]
