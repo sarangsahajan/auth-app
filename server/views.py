@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from .decorators import authenticate_token
 from django.conf import settings
 from datetime import datetime, timedelta
+from rest_framework.decorators import api_view
 
 
 # MongoDB connection
@@ -14,6 +15,7 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["faceswap"]
 
 
+@api_view(['POST'])
 @csrf_exempt
 def signup(request):
     if request.method == "POST":
@@ -51,6 +53,7 @@ def signup(request):
         return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
+@api_view(['POST'])
 @csrf_exempt
 def login(request):
     if request.method == "POST":
@@ -82,6 +85,7 @@ def login(request):
         return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
+@api_view(['GET'])
 @csrf_exempt
 @authenticate_token
 def protected_view(request):
